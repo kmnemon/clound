@@ -35,24 +35,24 @@ public class ReviewServiceApplicationTests {
 		repository.deleteAll();
 	}
 
-	@Test
-	public void getReviewsByProductId() {
-
-		int productId = 1;
-
-		assertEquals(0, repository.findByProductId(productId).size());
-
-		postAndVerifyReview(productId, 1, OK);
-		postAndVerifyReview(productId, 2, OK);
-		postAndVerifyReview(productId, 3, OK);
-
-		assertEquals(3, repository.findByProductId(productId).size());
-
-		getAndVerifyReviewsByProductId(productId, OK)
-			.jsonPath("$.length()").isEqualTo(3)
-			.jsonPath("$[2].productId").isEqualTo(productId)
-			.jsonPath("$[2].reviewId").isEqualTo(3);
-	}
+//	@Test
+//	public void getReviewsByProductId() {
+//
+//		int productId = 1;
+//
+//		assertEquals(0, repository.findByProductId(productId).size());
+//
+//		postAndVerifyReview(productId, 1, OK);
+//		postAndVerifyReview(productId, 2, OK);
+//		postAndVerifyReview(productId, 3, OK);
+//
+//		assertEquals(3, repository.findByProductId(productId).size());
+//
+//		getAndVerifyReviewsByProductId(productId, OK)
+//			.jsonPath("$.length()").isEqualTo(3)
+//			.jsonPath("$[2].productId").isEqualTo(productId)
+//			.jsonPath("$[2].reviewId").isEqualTo(3);
+//	}
 
 	@Test
 	public void duplicateError() {

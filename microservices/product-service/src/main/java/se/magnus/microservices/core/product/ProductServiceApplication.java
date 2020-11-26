@@ -20,7 +20,7 @@ import se.magnus.microservices.core.product.persistence.ProductEntity;
 
 @SpringBootApplication
 @ComponentScan("se.magnus")
-public class ProductServiceApplication {
+public class 	ProductServiceApplication {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProductServiceApplication.class);
 

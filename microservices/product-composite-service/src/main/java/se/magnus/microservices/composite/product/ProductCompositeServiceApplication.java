@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -18,6 +19,7 @@ import static springfox.documentation.spi.DocumentationType.SWAGGER_2;
 
 @SpringBootApplication
 @ComponentScan("se.magnus")
+@EnableOpenApi
 public class ProductCompositeServiceApplication {
 
     @Value("${api.common.version}")           String apiVersion;

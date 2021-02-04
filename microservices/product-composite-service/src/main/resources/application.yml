@@ -62,8 +62,8 @@ app:
     host: localhost
     port: 7003
 
-#output-products is a channel name
-#products is a topic name
+#channel name : output-products
+#topic name : destination: products
 
 spring.cloud.stream:
   defaultBinder: rabbit

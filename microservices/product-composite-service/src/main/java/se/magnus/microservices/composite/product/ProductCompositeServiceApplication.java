@@ -1,4 +1,4 @@
-ŒŒŒpackage se.magnus.microservices.composite.product;
+package se.magnus.microservices.composite.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

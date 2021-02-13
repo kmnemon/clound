@@ -10,8 +10,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=0
     depends_on:
-      mongodb:
-        condition: service_healthy
+  #    mongodb:
+   #     condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
@@ -24,8 +24,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=1
     depends_on:
-      mongodb:
-        condition: service_healthy
+  #    mongodb:
+  #      condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
@@ -38,8 +38,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=0
     depends_on:
-      mongodb:
-        condition: service_healthy
+    #  mongodb:
+    #    condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
@@ -52,8 +52,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=1
     depends_on:
-      mongodb:
-        condition: service_healthy
+   #   mongodb:
+   #     condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
@@ -66,8 +66,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=0
     depends_on:
-      mysql:
-        condition: service_healthy
+  #    mysql:
+  #      condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
@@ -80,8 +80,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=1
     depends_on:
-      mysql:
-        condition: service_healthy
+  #    mysql:
+  #      condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
@@ -102,35 +102,7 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # $ mongo
-  mongodb:
-    image: mongo:3.6.9
-    mem_limit: 350m
-    ports:
-      - "27017:27017"
-    command: mongod --smallfiles
-    healthcheck:
-      test: "mongo --eval 'db.stats().ok'"
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
-  # $ mysql -uroot -h127.0.0.1 -p
-  mysql:
-    image: mysql:5.7
-    mem_limit: 350m
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpwd
-      - MYSQL_DATABASE=review-db
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=pwd
-    healthcheck:
-      test: "/usr/bin/mysql --user=user --password=pwd --execute \"SHOW DATABASES;\""
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   rabbitmq:
     image: rabbitmq:3.7.8-management

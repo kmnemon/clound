@@ -5,9 +5,9 @@ server.error.include-message: always
 spring.jpa.hibernate.ddl-auto: update
 
 spring.datasource:
-  url: jdbc:mysql://localhost/review-db
-  username: user
-  password: pwd
+  url: jdbc:mysql://192.168.3.220/review
+  username: ke
+  password: contra123
 
 spring.datasource.hikari.initializationFailTimeout: 60000
 
@@ -55,7 +55,7 @@ spring.profiles: docker
 
 server.port: 8080
 
-spring.datasource.url: jdbc:mysql://mysql/review-db
+spring.datasource.url: jdbc:mysql://192.168.3.220:3306/review
 
 spring.rabbitmq.host: rabbitmq
 

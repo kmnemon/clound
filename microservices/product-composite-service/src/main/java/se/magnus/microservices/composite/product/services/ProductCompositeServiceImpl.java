@@ -1,17 +1,22 @@
 package se.magnus.microservices.composite.product.services;
 
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.support.ModelAndViewContainer;
 import reactor.core.publisher.Mono;
 import se.magnus.api.composite.product.*;
 import se.magnus.api.core.product.Product;
 import se.magnus.api.core.recommendation.Recommendation;
 import se.magnus.api.core.review.Review;
 import se.magnus.util.http.ServiceUtil;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -59,6 +64,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
             throw re;
         }
     }
+    
 
     @Override
     public Mono<ProductAggregate> getCompositeProduct(int productId) {
@@ -117,4 +123,6 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         return new ProductAggregate(productId, name, weight, recommendationSummaries, reviewSummaries, serviceAddresses);
     }
+
+
 }

@@ -1,11 +1,9 @@
 package se.magnus.api.composite.product;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(description = "REST API for composite product information.")
 public interface ProductCompositeService {
@@ -30,6 +28,8 @@ public interface ProductCompositeService {
         value    = "/product-composite",
         consumes = "application/json")
     void createCompositeProduct(@RequestBody ProductAggregate body);
+
+
 
     /**
      * Sample usage: curl $HOST:$PORT/product-composite/1
@@ -67,4 +67,7 @@ public interface ProductCompositeService {
     })
     @DeleteMapping(value = "/product-composite/{productId}")
     void deleteCompositeProduct(@PathVariable int productId);
+
+
+
 }

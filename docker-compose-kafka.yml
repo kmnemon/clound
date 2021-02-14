@@ -13,7 +13,7 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=0
     depends_on:
       - kafka
-      - mongodb
+  #    - mongodb
 
   product-p1:
     build: microservices/product-service
@@ -27,7 +27,7 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=1
     depends_on:
       - kafka
-      - mongodb
+ #     - mongodb
 
   recommendation:
     build: microservices/recommendation-service
@@ -41,7 +41,7 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=0
     depends_on:
       - kafka
-      - mongodb
+#      - mongodb
 
   recommendation-p1:
     build: microservices/recommendation-service
@@ -55,7 +55,7 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=1
     depends_on:
       - kafka
-      - mongodb
+ #     - mongodb
 
   review:
     build: microservices/review-service
@@ -68,8 +68,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=0
     depends_on:
-      mysql:
-        condition: service_healthy
+ #     mysql:
+ #       condition: service_healthy
       kafka:
         condition: service_started
 
@@ -84,8 +84,8 @@ services:
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCECOUNT=2
       - SPRING_CLOUD_STREAM_BINDINGS_INPUT_CONSUMER_INSTANCEINDEX=1
     depends_on:
-      mysql:
-        condition: service_healthy
+  #    mysql:
+   #     condition: service_healthy
       kafka:
         condition: service_started
 
@@ -107,33 +107,11 @@ services:
     depends_on:
       - kafka
 
-  # $ mongo
-  mongodb:
-    image: mongo:3.6.9
-    mem_limit: 350m
-    ports:
-      - "27017:27017"
-    command: mongod --smallfiles
 
-  # $ mysql -uroot -h127.0.0.1 -p
-  mysql:
-    image: mysql:5.7
-    mem_limit: 350m
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpwd
-      - MYSQL_DATABASE=review-db
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=pwd
-    healthcheck:
-      test: "/usr/bin/mysql --user=user --password=pwd --execute \"SHOW DATABASES;\""
-      interval: 10s
-      timeout: 5s
-      retries: 10
+
 
   kafka:
-    image: wurstmeister/kafka:2.12-2.1.0
+    image: wurstmeister/kafka:2.12-2.5.0
     mem_limit: 350m
     ports:
       - "9092:9092"

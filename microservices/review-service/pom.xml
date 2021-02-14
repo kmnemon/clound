@@ -96,6 +96,8 @@
 			<artifactId>spring-cloud-starter-stream-kafka</artifactId>
 			<version>3.0.10.RELEASE</version>
 		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-stream-test-support -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

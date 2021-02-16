@@ -27,7 +27,7 @@ public class PersistenceTests {
 
     @Before
    	public void setupDb() {
-   		repository.deleteAll();
+   		repository.deleteAll().block();
 
         RecommendationEntity entity = new RecommendationEntity(1, 2, "a", 3, "c");
         savedEntity = repository.save(entity).block();
@@ -40,18 +40,18 @@ public class PersistenceTests {
    	public void create() {
 
         RecommendationEntity newEntity = new RecommendationEntity(1, 3, "a", 3, "c");
-        repository.save(newEntity);
+        repository.save(newEntity).block();
 
         RecommendationEntity foundEntity = repository.findById(newEntity.getId()).block();
         assertEqualsRecommendation(newEntity, foundEntity);
 
-        assertEquals(2, repository.count());
+        assertEquals(2, (long)repository.count().block());
     }
 
     @Test
    	public void update() {
         savedEntity.setAuthor("a2");
-        repository.save(savedEntity);
+        repository.save(savedEntity).block();
 
         RecommendationEntity foundEntity = repository.findById(savedEntity.getId()).block();
         assertEquals(1, (long)foundEntity.getVersion());
@@ -60,13 +60,13 @@ public class PersistenceTests {
 
     @Test
    	public void delete() {
-        repository.delete(savedEntity);
+        repository.delete(savedEntity).block();
         assertFalse(repository.existsById(savedEntity.getId()).block());
     }
 
     @Test
    	public void getByProductId() {
-        List<RecommendationEntity> entityList = repository.findByProductId(savedEntity.getProductId()).buffer().blockLast();
+        List<RecommendationEntity> entityList = repository.findByProductId(savedEntity.getProductId()).collectList().block();
 
         assertThat(entityList, hasSize(1));
         assertEqualsRecommendation(savedEntity, entityList.get(0));
@@ -75,7 +75,7 @@ public class PersistenceTests {
     @Test(expected = DuplicateKeyException.class)
    	public void duplicateError() {
         RecommendationEntity entity = new RecommendationEntity(1, 2, "a", 3, "c");
-        repository.save(entity);
+        repository.save(entity).block();
     }
 
     @Test
@@ -87,13 +87,13 @@ public class PersistenceTests {
 
         // Update the entity using the first entity object
         entity1.setAuthor("a1");
-        repository.save(entity1);
+        repository.save(entity1).block();
 
         //  Update the entity using the second entity object.
         // This should fail since the second entity now holds a old version number, i.e. a Optimistic Lock Error
         try {
             entity2.setAuthor("a2");
-            repository.save(entity2);
+            repository.save(entity2).block();
 
             fail("Expected an OptimisticLockingFailureException");
         } catch (OptimisticLockingFailureException e) {}

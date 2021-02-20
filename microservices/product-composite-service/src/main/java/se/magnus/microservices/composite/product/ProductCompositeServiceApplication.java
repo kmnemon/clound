@@ -61,8 +61,6 @@ public class ProductCompositeServiceApplication {
                 ));
     }
 
-	@Autowired
-	ProductCompositeIntegration integration;
 
 	@Bean
 	@LoadBalanced

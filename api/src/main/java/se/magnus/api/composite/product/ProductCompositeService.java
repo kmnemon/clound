@@ -1,9 +1,11 @@
 package se.magnus.api.composite.product;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import springfox.documentation.annotations.ApiIgnore;
 
 @Api(description = "REST API for composite product information.")
 public interface ProductCompositeService {
@@ -27,9 +29,7 @@ public interface ProductCompositeService {
     @PostMapping(
         value    = "/product-composite",
         consumes = "application/json")
-    void createCompositeProduct(@RequestBody ProductAggregate body);
-
-
+    Mono<Void> createCompositeProduct(@RequestBody ProductAggregate body);
 
     /**
      * Sample usage: curl $HOST:$PORT/product-composite/1
@@ -50,7 +50,6 @@ public interface ProductCompositeService {
         produces = "application/json")
     Mono<ProductAggregate> getCompositeProduct(@PathVariable int productId);
 
-
     /**
      * Sample usage:
      *
@@ -66,8 +65,5 @@ public interface ProductCompositeService {
         @ApiResponse(code = 422, message = "Unprocessable entity, input parameters caused the processing to fail. See response message for more information.")
     })
     @DeleteMapping(value = "/product-composite/{productId}")
-    void deleteCompositeProduct(@PathVariable int productId);
-
-
-
+    Mono<Void> deleteCompositeProduct(@PathVariable int productId);
 }

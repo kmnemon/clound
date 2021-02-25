@@ -54,6 +54,7 @@ spring.cloud.gateway.routes:
   - Path=/config/**
   filters:
   - RewritePath=/config/(?<segment>.*), /$\{segment}
+
 - id: host_route_200
   uri: http://httpstat.us
   predicates:
@@ -78,9 +79,6 @@ spring.cloud.gateway.routes:
   - SetPath=/501
 
 spring.security.oauth2.resourceserver.jwt.jwk-set-uri: http://${app.auth-server}:9999/.well-known/jwks.json
-
-management.endpoint.health.show-details: "ALWAYS"
-management.endpoints.web.exposure.include: "*"
 
 logging:
   level:

@@ -10,7 +10,6 @@ spring.data.mongodb:
   database: product-db
 
 
-
 spring.cloud.stream:
   defaultBinder: rabbit
   default.contentType: application/json
@@ -42,7 +41,7 @@ spring.profiles: docker
 
 server.port: 8080
 
-spring.data.mongodb.host: mongodb
+spring.data.mongodb.host: 192.168.3.220
 
 ---
 spring.profiles: streaming_partitioned

@@ -10,9 +10,6 @@ spring.data.mongodb:
   database: product-db
 
 
-  #uri: mongodb://admin:contra123@192.168.3.220:27017/product-db
-
-
 
 spring.cloud.stream:
   defaultBinder: rabbit

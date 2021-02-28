@@ -55,8 +55,6 @@ server.error.include-message: always
 ribbon.ServerListRefreshInterval: 5000
 
 ribbon.NFLoadBalancerPingInterval: 5
-#channel name : output-products
-#topic name : destination: products
 
 spring.cloud.stream:
   defaultBinder: rabbit

@@ -7,7 +7,6 @@ server.ssl:
   key-alias: localhost
 
 app:
-  auth-server: localhost
   config-server: localhost
 
 

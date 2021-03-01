@@ -1,9 +1,12 @@
 package se.magnus.microservices.composite.product.services;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.reactor.retry.RetryExceptionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.handler.advice.RequestHandlerCircuitBreakerAdvice;
+import org.springframework.retry.RetryException;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -83,7 +86,8 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                 values -> createProductAggregate((SecurityContext) values[0], (Product) values[1], (List<Recommendation>) values[2], (List<Review>) values[3], serviceUtil.getServiceAddress()),
                 ReactiveSecurityContextHolder.getContext().defaultIfEmpty(nullSC),
                 integration.getProduct(productId, delay, faultPercent)
-                    .onErrorReturn(CallNotPermittedException.class, getProductFallbackValue(productId)),
+                    .onErrorMap(RetryExceptionWrapper.class, retryException-> retryException.getCause())
+                    .onErrorReturn(RequestHandlerCircuitBreakerAdvice.CircuitBreakerOpenException.class, getProductFallbackValue(productId)),
                 integration.getRecommendations(productId).collectList(),
                 integration.getReviews(productId).collectList())
             .doOnError(ex -> LOG.warn("getCompositeProduct failed: {}", ex.toString()))

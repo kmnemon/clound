@@ -149,13 +149,13 @@
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
 			<artifactId>resilience4j-spring-boot2</artifactId>
-			<version>1.7.0</version>
+			<version>1.2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-reactor -->
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
 			<artifactId>resilience4j-reactor</artifactId>
-			<version>1.7.0</version>
+			<version>1.2.0</version>
 		</dependency>
 
 

@@ -15,7 +15,7 @@ public class SecurityConfig {
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 		http
 			.authorizeExchange()
-//				.pathMatchers("/actuator/**").permitAll()
+				.pathMatchers("/actuator/**").permitAll()
 				.pathMatchers(POST, "/product-composite/**").hasAuthority("SCOPE_product:write")
 				.pathMatchers(DELETE, "/product-composite/**").hasAuthority("SCOPE_product:write")
 				.pathMatchers(GET, "/product-composite/**").hasAuthority("SCOPE_product:read")

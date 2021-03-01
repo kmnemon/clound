@@ -1,11 +1,12 @@
 package se.magnus.microservices.composite.product.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
@@ -50,7 +51,9 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     private WebClient webClient;
 
-    private MessageSources messageSources;
+    private final MessageSources messageSources;
+
+    private final int productServiceTimeoutSec;
 
     public interface MessageSources {
 
@@ -72,11 +75,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     public ProductCompositeIntegration(
         WebClient.Builder webClientBuilder,
         ObjectMapper mapper,
-        MessageSources messageSources
+        MessageSources messageSources,
+        @Value("${app.product-service.timeoutSec}") int productServiceTimeoutSec
+
     ) {
         this.webClientBuilder = webClientBuilder;
         this.mapper = mapper;
         this.messageSources = messageSources;
+        this.productServiceTimeoutSec = productServiceTimeoutSec;
     }
 
     @Override
@@ -86,6 +92,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
     @Retry(name = "product")
+    @CircuitBreaker(name = "product")
     @Override
     public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
 
@@ -94,8 +101,8 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
         return getWebClient().get().uri(url)
             .retrieve().bodyToMono(Product.class).log()
-            .onErrorMap(WebClientResponseException.class, ex -> handleException(ex));
-
+            .onErrorMap(WebClientResponseException.class, ex -> handleException(ex))
+            .timeout(Duration.ofSeconds(productServiceTimeoutSec));
     }
 
     @Override
@@ -112,7 +119,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Recommendation> getRecommendations(int productId) {
 
-        String url = recommendationServiceUrl + "/recommendation?productId=" + productId;
+        URI url = UriComponentsBuilder.fromUriString(recommendationServiceUrl + "/recommendation?productId={productId}").build(productId);
 
         LOG.debug("Will call the getRecommendations API on URL: {}", url);
 
@@ -134,7 +141,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Review> getReviews(int productId) {
 
-        String url = reviewServiceUrl + "/review?productId=" + productId;
+        URI url = UriComponentsBuilder.fromUriString(reviewServiceUrl + "/review?productId={productId}").build(productId);
 
         LOG.debug("Will call the getReviews API on URL: {}", url);
 
@@ -146,27 +153,6 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public void deleteReviews(int productId) {
         messageSources.outputReviews().send(MessageBuilder.withPayload(new Event(DELETE, productId, null)).build());
-    }
-
-    public Mono<Health> getProductHealth() {
-        return getHealth(productServiceUrl);
-    }
-
-    public Mono<Health> getRecommendationHealth() {
-        return getHealth(recommendationServiceUrl);
-    }
-
-    public Mono<Health> getReviewHealth() {
-        return getHealth(reviewServiceUrl);
-    }
-
-    private Mono<Health> getHealth(String url) {
-        url += "/actuator/health";
-        LOG.debug("Will call the Health API on URL: {}", url);
-        return getWebClient().get().uri(url).retrieve().bodyToMono(String.class)
-            .map(s -> new Health.Builder().up().build())
-            .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
-            .log();
     }
 
     private WebClient getWebClient() {
